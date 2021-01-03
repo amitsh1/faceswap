@@ -637,7 +637,7 @@ class _Settings():
         logger.debug("Initializing %s: (arguments: %s, mixed_precision: %s, allow_growth: %s, "
                      "is_predict: %s)", self.__class__.__name__, arguments, mixed_precision,
                      allow_growth, is_predict)
-        self._tf_version = [int(i) for i in tf.__version__.split(".")]
+        self._tf_version = [int(i) for i in tf.__version__.split(".")[:2]]
         self._set_tf_settings(allow_growth, arguments.exclude_gpus)
 
         use_mixed_precision = not is_predict and mixed_precision and get_backend() == "nvidia"
@@ -770,7 +770,7 @@ class _Settings():
             logger.debug("New value: %s", device_compatibility_check._logged_compatibility_check)
 
         policy = self._mixed_precision.Policy('mixed_float16')
-        if self._tf_version[0] == 2 and self._tf_version[0] < 4:
+        if self._tf_version[0] == 2 and self._tf_version[1] < 4:
             self._mixed_precision.set_policy(policy)
         else:
             self._mixed_precision.set_global_policy(policy)
